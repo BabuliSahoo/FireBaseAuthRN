@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useContext, useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //import AppLoading from 'expo-app-loading';
-import SplashScreen from 'expo-splash-screen';
+import SplashScreen from "expo-splash-screen";
 
-import LoginScreen from './screens/LoginScreen';
-import SignupScreen from './screens/SignupScreen';
-import WelcomeScreen from './screens/WelcomeScreen';
-import { Colors } from './constants/styles';
-import AuthContextProvider, { AuthContext } from './store/auth-context';
-import IconButton from './components/ui/IconButton';
+import LoginScreen from "./screens/LoginScreen";
+import SignupScreen from "./screens/SignupScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
+import { Colors } from "./constants/styles";
+import AuthContextProvider, { AuthContext } from "./store/auth-context";
+import IconButton from "./components/ui/IconButton";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +20,7 @@ function AuthStack() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
+        headerTintColor: "white",
         contentStyle: { backgroundColor: Colors.primary100 },
       }}
     >
@@ -36,7 +36,7 @@ function AuthenticatedStack() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: 'white',
+        headerTintColor: "white",
         contentStyle: { backgroundColor: Colors.primary100 },
       }}
     >
@@ -76,34 +76,31 @@ function Root() {
 
   useEffect(() => {
     async function fetchToken() {
-      const storedToken = await AsyncStorage.getItem('token');
-
-      if (storedToken) {
-        authCtx.authenticate(storedToken);
+      try {
+        //await SplashScreen.preventAutoHideAsync();
+        const storedToken = await AsyncStorage.getItem("token");
+        if (storedToken) {
+          authCtx.authenticate(storedToken);
+        }
+        setIsTryingLogin(false);
+      } catch (e) {
+        // We might want to provide this error information to an error reporting service
+        console.warn(e);
+      } finally {
+        if (isTryingLogin) {
+          //return <AppLoading />;
+          //await SplashScreen.hideAsync();
+        }
       }
-
-      setIsTryingLogin(false);
     }
 
     fetchToken();
   }, []);
 
-
-  useEffect(() => { 
-    async function hideSplash() {
-      if (isTryingLogin) {
-        //return <AppLoading />;
-        await SplashScreen.hideAsync();
-      }
-    }
-    hideSplash();
-   }, []);
-
   return <Navigation />;
 }
 
 export default function App() {
-  
   return (
     <>
       <StatusBar style="light" />
