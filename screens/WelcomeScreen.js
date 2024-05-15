@@ -13,12 +13,18 @@ function WelcomeScreen() {
   useEffect(() => {
     axios
       .get(
-        'https://react-native-course-3cceb-default-rtdb.firebaseio.com/message.json?auth=' +
+        'https://fir-authrn-3f3a2-default-rtdb.asia-southeast1.firebasedatabase.app/message.json?auth=' +
           token
       )
       .then((response) => {
+        console.log("response ::: ",response.data);
         setFetchedMesssage(response.data);
-      });
+        console.log("response After ::: ",fetchedMessage);
+      }).finally(
+        () =>{
+          console.log("response After finally ::: ",fetchedMessage);
+        }
+      );
   }, [token]);
 
   return (
@@ -26,6 +32,7 @@ function WelcomeScreen() {
       <Text style={styles.title}>Welcome!</Text>
       <Text>You authenticated successfully!</Text>
       <Text>{fetchedMessage}</Text>
+      <Text>Completed</Text>
     </View>
   );
 }
