@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppLoading from 'expo-app-loading';
+//import AppLoading from 'expo-app-loading';
+import SplashScreen from 'expo-splash-screen';
 
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
@@ -87,9 +88,16 @@ function Root() {
     fetchToken();
   }, []);
 
-  if (isTryingLogin) {
-    return <AppLoading />;
-  }
+
+  useEffect(() => { 
+    async function hideSplash() {
+      if (isTryingLogin) {
+        //return <AppLoading />;
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplash();
+   }, []);
 
   return <Navigation />;
 }
